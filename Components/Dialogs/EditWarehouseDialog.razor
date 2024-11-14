@@ -1,0 +1,22 @@
+﻿@inherits EditDialogBase
+<MudDialog Style="width: 600px; height: 350px;">
+     <DialogContent>
+        <EditForm Model="@oldwarehouse" OnValidSubmit="UpdateWarehouse">
+            <DataAnnotationsValidator />
+            <MudTextField Label="Warehouse Name"
+                Variant="Variant.Outlined"
+                          @bind-Value="oldwarehouse.Warehouse"
+                          For="@(() => oldwarehouse.Warehouse)"
+                          Required="true" />
+            <MudTextField Label="Modified By"
+                          Variant="Variant.Outlined"
+                          @bind-Value="oldwarehouse.ModifiedBy"
+                          For="@(() => oldwarehouse.ModifiedBy)"
+                          Required="true" />
+        </EditForm>
+     </DialogContent>
+     <DialogActions>
+        <MudButton Color="@Color.Success" Variant="Variant.Filled" OnClick="UpdateWarehouse">Save</MudButton>
+         <MudButton OnClick="Cancel">Cancel</MudButton>
+     </DialogActions>
+ </MudDialog>

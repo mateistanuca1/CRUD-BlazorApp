@@ -1,0 +1,121 @@
+﻿@page "/CRUD"
+@rendermode InteractiveServer
+@inherits CRUDBase
+@using BlazorStrap
+@inject IJSRuntime JSRuntime
+
+<div style="display: flex; align-items: center; justify-content: center;">
+    <h4>Warehouse List</h4>
+    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Size="Size.Small" OnClick="OpenAddForm" Style="margin-top: -8px;" />
+</div>
+
+@if (showAddForm)
+{
+    <EditForm Model="@newWarehouse" OnValidSubmit="CreateWarehouseAsync">
+        <DataAnnotationsValidator />
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudCard>
+                    <MudCardContent>
+                        <MudTextField Label="Warehouse Name"
+                                      @bind-Value="newWarehouse.Warehouse"
+                                      For="@(() => newWarehouse.Warehouse)"
+                                      Required="true" />
+                        <MudTextField Label="Created By"
+                                      @bind-Value="newWarehouse.CreatedBy"
+                                      For="@(() => newWarehouse.CreatedBy)"
+                                      Required="true" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Add Warehouse</MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="CloseAddForm">Cancel</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <MudPaper Class="pa-4 mud-height-full">
+                    <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+                    @if (isWarehouseAdded)
+                    {
+                        <MudText Color="Color.Success">Warehouse successfully added!</MudText>
+                    }
+                    else
+                    {
+                        <MudText Color="Color.Error">
+                            <ValidationSummary />
+                        </MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
+
+
+@if (warehousesList.Any())
+{
+    <MudTable Items="warehousesList" Hover="true" Bordered="true" Striped="true" >
+        <HeaderContent>
+            <MudTh>
+                <span>Warehouse Name</span>
+                <MudIconButton OnClick="() => SortTable(nameof(DbWarehouse.Warehouse))"
+                               Icon="@Icons.Material.Filled.ArrowDownward"
+                               Color="Color.Default"
+                               Size="Size.Small"
+                               Style="color: gray;" />
+            </MudTh>
+            <MudTh>
+                <span>Created By</span>
+                <MudIconButton OnClick="() => SortTable(nameof(DbWarehouse.CreatedBy))" 
+                               Icon="@Icons.Material.Filled.ArrowDownward"
+                               Color="Color.Default"
+                               Size="Size.Small"
+                               Style="color: gray;" />
+            </MudTh>
+            <MudTh>
+                <span>Created At</span>
+                <MudIconButton OnClick="() => SortTable(nameof(DbWarehouse.CreatedAt))"
+                    Icon="@Icons.Material.Filled.ArrowDownward"
+                               Color="Color.Default"
+                               Size="Size.Small"
+                               Style="color: gray;" />
+            </MudTh>
+            <MudTh>
+                <span>Modified By</span>
+                <MudIconButton OnClick="() => SortTable(nameof(DbWarehouse.ModifiedBy))"
+                    Icon="@Icons.Material.Filled.ArrowDownward"
+                               Color="Color.Default"
+                               Size="Size.Small"
+                               Style="color: gray;" />
+            </MudTh>
+            <MudTh>
+                <span>Modified At</span>
+                <MudIconButton OnClick="() => SortTable(nameof(DbWarehouse.ModifiedAt))" 
+                    Icon="@Icons.Material.Filled.ArrowDownward"
+                               Color="Color.Default"
+                               Size="Size.Small"
+                               Style="color: gray;" />
+            </MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Warehouse Name">@context.Warehouse</MudTd>
+            <MudTd DataLabel="Created By">@context.CreatedBy</MudTd>
+            <MudTd DataLabel="Created At">@context.CreatedAt?.ToString("g")</MudTd>
+            <MudTd DataLabel="Modified By">@context.ModifiedBy</MudTd>
+            <MudTd DataLabel="Modified At">@context.ModifiedAt?.ToString("g")</MudTd>
+
+            <MudTd DataLabel="Actions">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               OnClick="@(args => EditWarehouse(@context))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Error"
+                               Size="Size.Small"
+                               OnClick="@(args => DeleteWarehouse(@context))" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
